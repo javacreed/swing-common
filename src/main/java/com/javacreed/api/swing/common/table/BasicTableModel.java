@@ -2,18 +2,28 @@ package com.javacreed.api.swing.common.table;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.table.AbstractTableModel;
 
 public class BasicTableModel<T> extends AbstractTableModel implements Iterable<T> {
 
-  private static final long serialVersionUID = 6069717250611750536L;
+  @FunctionalInterface
+  public static interface RowEqualizer<E> {
+    boolean areEquals(E a, E b);
+  }
+
+  private static final long serialVersionUID = 3543147549154064649L;
+
+  private final RowEqualizer<T> rowEqualizer = this::defaultAreRowEquals;
 
   private final transient List<Column<T>> columns = new ArrayList<>();
 
-  private final List<T> rows = new ArrayList<>();
+  private List<T> rows = new ArrayList<>();
 
   public void addColumn(final Column<T> column) {
     this.columns.add(column);
@@ -27,6 +37,31 @@ public class BasicTableModel<T> extends AbstractTableModel implements Iterable<T
     return index;
   }
 
+  public int addRowIfUnique(final T row) {
+    for (int i = 0, size = rows.size(); i < size; i++) {
+      final T existing = rows.get(i);
+      if (rowEqualizer.areEquals(row, existing)) {
+        return -(i - 1);
+      }
+    }
+
+    return addRow(row);
+  }
+
+  public void addRows(final Collection<T> rows) {
+    if (false == rows.isEmpty()) {
+      final int index = this.rows.size();
+      this.rows.addAll(rows);
+      fireTableRowsInserted(index, rows.size() - 1);
+    }
+  }
+
+  public void addRowsIfUnique(final Collection<T> rows) {
+    for (final T row : rows) {
+      addRowIfUnique(row);
+    }
+  }
+
   public void clear() {
     clearSilently();
     fireTableDataChanged();
@@ -34,6 +69,14 @@ public class BasicTableModel<T> extends AbstractTableModel implements Iterable<T
 
   public void clearSilently() {
     rows.clear();
+  }
+
+  protected boolean defaultAreRowEquals(final T a, final T b) {
+    if (a == null) {
+      return b == null;
+    }
+
+    return a.equals(b);
   }
 
   public int findRowIndex(final T object) {
@@ -86,6 +129,10 @@ public class BasicTableModel<T> extends AbstractTableModel implements Iterable<T
     return columns.get(columnIndex).isEditable(row);
   }
 
+  public boolean isEmpty() {
+    return rows.isEmpty();
+  }
+
   @Override
   public Iterator<T> iterator() {
     return rows.iterator();
@@ -132,6 +179,16 @@ public class BasicTableModel<T> extends AbstractTableModel implements Iterable<T
     final T row = rows.get(rowIndex);
     columns.get(columnIndex).set(value, row);
     fireTableCellUpdated(rowIndex, columnIndex);
+  }
+
+  public void shareRows(final List<T> rows) throws NullPointerException {
+    this.rows = Objects.requireNonNull(rows);
+    fireTableDataChanged();
+  }
+
+  public void sort(final Comparator<T> comparator) {
+    Collections.sort(rows, comparator);
+    fireTableDataChanged();
   }
 
   public int updateRowObject(final T object) {

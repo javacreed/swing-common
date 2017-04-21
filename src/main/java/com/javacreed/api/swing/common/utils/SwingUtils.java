@@ -32,6 +32,8 @@ import javax.swing.text.JTextComponent;
 
 import com.javacreed.api.swing.common.focus.FocusGainedListener;
 import com.javacreed.api.swing.common.focus.FocusLostListener;
+import com.javacreed.api.swing.common.text.DocumentValidationListener;
+import com.javacreed.api.swing.common.text.TextFieldValidator;
 
 public class SwingUtils {
 
@@ -106,6 +108,7 @@ public class SwingUtils {
     final JButton button = new JButton(action);
     button.setMargin(new Insets(1, 5, 1, 5));
     button.setName((String) action.getValue(Action.ACTION_COMMAND_KEY));
+    button.setToolTipText((String) action.getValue(Action.ACTION_COMMAND_KEY));
     return button;
   }
 
@@ -125,6 +128,15 @@ public class SwingUtils {
         listener.focusLost(e);
       }
     };
+  }
+
+  public static JButton createIconButton(final Action action) {
+    final JButton button = new JButton(action);
+    button.setText("");
+    button.setMargin(new Insets(1, 5, 1, 5));
+    button.setName((String) action.getValue(Action.ACTION_COMMAND_KEY));
+    button.setToolTipText((String) action.getValue(Action.ACTION_COMMAND_KEY));
+    return button;
   }
 
   public static JToggleButton createToggelButton(final Action action) {
