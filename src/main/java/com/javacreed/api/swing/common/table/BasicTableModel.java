@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -115,6 +116,10 @@ public class BasicTableModel<T> extends AbstractTableModel implements Iterable<T
 
   public List<T> getRows() {
     return rows;
+  }
+
+  public Stream<T> getRowsAsStream() {
+    return rows.stream();
   }
 
   @Override
