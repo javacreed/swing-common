@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/swing-common
     docker:
-      - image: 8u111-jdk
+      - image: 8u121-jdk
     steps:
       - checkout
       - run: mvn clean verify
