@@ -165,6 +165,15 @@ public class SwingUtils {
     return null;
   }
 
+  public static void registerKeyAction(final JComponent component, final KeyStroke keyStroke, final Action action) {
+    component.getInputMap().put(keyStroke, action.getValue(Action.ACTION_COMMAND_KEY));
+    component.getActionMap().put(action.getValue(Action.ACTION_COMMAND_KEY), action);
+  }
+
+  public static void registerKeyAction(final JComponent component, final String key, final Action action) {
+    SwingUtils.registerKeyAction(component, KeyStroke.getKeyStroke(key), action);
+  }
+
   public static void scrollToSelectedRow(final JTable table) {
     final int row = Math.max(0, table.getSelectedRow());
     if (table.getRowCount() > row) {
