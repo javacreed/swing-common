@@ -23,6 +23,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JRootPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -163,6 +165,16 @@ public class SwingUtils {
     } catch (final Exception e) {}
 
     return null;
+  }
+
+  public static void registerEscapeAction(final JDialog dialog, final Action action) {
+    SwingUtils.registerEscapeAction(dialog.getRootPane(), action);
+  }
+
+  public static void registerEscapeAction(final JRootPane root, final Action action) {
+    root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+        action.getValue(Action.ACTION_COMMAND_KEY));
+    root.getActionMap().put(action.getValue(Action.ACTION_COMMAND_KEY), action);
   }
 
   public static void registerKeyAction(final JComponent component, final KeyStroke keyStroke, final Action action) {
