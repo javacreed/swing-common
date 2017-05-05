@@ -143,6 +143,64 @@ public class BasicTableModel<T> extends AbstractTableModel implements Iterable<T
     return rows.iterator();
   }
 
+  public boolean moveRowDown(final int index) {
+    /* Last row */
+    if (index == rows.size() - 1) {
+      return false;
+    }
+
+    final T a = rows.get(index);
+    final T b = rows.get(index + 1);
+
+    rows.set(index, b);
+    rows.set(index + 1, a);
+
+    fireTableRowsUpdated(index, index + 1);
+    return true;
+  }
+
+  public int moveRowDown(final T row) {
+    final int index = findRowIndex(row);
+    if (index == -1) {
+      return -1;
+    }
+
+    if (moveRowDown(index)) {
+      return index + 1;
+    }
+
+    return index;
+  }
+
+  public boolean moveRowUp(final int index) {
+    /* Last row */
+    if (index == 0) {
+      return false;
+    }
+
+    final T a = rows.get(index);
+    final T b = rows.get(index - 1);
+
+    rows.set(index, b);
+    rows.set(index - 1, a);
+
+    fireTableRowsUpdated(index - 1, index);
+    return true;
+  }
+
+  public int moveRowUp(final T row) {
+    final int index = findRowIndex(row);
+    if (index == -1) {
+      return -1;
+    }
+
+    if (moveRowUp(index)) {
+      return index - 1;
+    }
+
+    return index;
+  }
+
   public void removeRowAt(final int rowIndex) {
     rows.remove(rowIndex);
     fireTableRowsDeleted(rowIndex, rowIndex);
