@@ -46,6 +46,51 @@ public class SwingUtils {
 
   public static final Color ERROR_BACKGROUND_COLOUR = new Color(255, 220, 220);
 
+  public static void addBackwardTransferFocusOn(final Container container, final KeyStroke... keyStrokes) {
+    final Set<AWTKeyStroke> backwardKeys = container
+        .getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
+    final Set<AWTKeyStroke> newBackwardKeys = new HashSet<>(backwardKeys);
+    for (final KeyStroke keyStroke : keyStrokes) {
+      newBackwardKeys.add(keyStroke);
+    }
+    container.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, newBackwardKeys);
+  }
+
+  public static void addBackwardTransferFocusOn(final Window window, final KeyStroke... keyStrokes) {
+    final Set<AWTKeyStroke> backwardKeys = window.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
+    final Set<AWTKeyStroke> newBackwardKeys = new HashSet<>(backwardKeys);
+    for (final KeyStroke keyStroke : keyStrokes) {
+      newBackwardKeys.add(keyStroke);
+    }
+    window.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, newBackwardKeys);
+  }
+
+  public static void addForwardTransferFocusOn(final Container container, final KeyStroke... keyStrokes) {
+    final Set<AWTKeyStroke> forwardKeys = container.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
+    final Set<AWTKeyStroke> newForwardKeys = new HashSet<>(forwardKeys);
+    for (final KeyStroke keyStroke : keyStrokes) {
+      newForwardKeys.add(keyStroke);
+    }
+    container.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, newForwardKeys);
+  }
+
+  public static void addForwardTransferFocusOn(final Window window, final KeyStroke... keyStrokes) {
+    final Set<AWTKeyStroke> forwardKeys = window.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
+    final Set<AWTKeyStroke> newForwardKeys = new HashSet<>(forwardKeys);
+    for (final KeyStroke keyStroke : keyStrokes) {
+      newForwardKeys.add(keyStroke);
+    }
+    window.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, newForwardKeys);
+  }
+
+  public static void addForwardTransferFocusOnEnter(final Container container) {
+    SwingUtils.addForwardTransferFocusOn(container, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+  }
+
+  public static void addForwardTransferFocusOnEnter(final Window window) {
+    SwingUtils.addForwardTransferFocusOn(window, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
+  }
+
   public static void addSelectAllOnFocusGain(final JTextComponent textComponent) {
     textComponent.addFocusListener(new FocusAdapter() {
       @Override
@@ -53,13 +98,6 @@ public class SwingUtils {
         textComponent.selectAll();
       }
     });
-  }
-
-  public static void addTransferFocusOnEnter(final Container container) {
-    final Set<AWTKeyStroke> forwardKeys = container.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
-    final Set<AWTKeyStroke> newForwardKeys = new HashSet<>(forwardKeys);
-    newForwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
-    container.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, newForwardKeys);
   }
 
   /**
@@ -77,13 +115,6 @@ public class SwingUtils {
         }
       };
     });
-  }
-
-  public static void addTransferFocusOnEnter(final Window window) {
-    final Set<AWTKeyStroke> forwardKeys = window.getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
-    final Set<AWTKeyStroke> newForwardKeys = new HashSet<>(forwardKeys);
-    newForwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0));
-    window.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, newForwardKeys);
   }
 
   public static TextFieldValidator addValidator(final JTextField textField, final TextValidation validation) {
